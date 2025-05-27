@@ -11,11 +11,12 @@ func main() {
 	PORT := "8080"
 	router := gin.Default()
 
-	group := router.Group("/api")
-	{
-		group.POST("/embed", api.EmbedReq)
-	}
+	router.Use(gin.Recovery()) // Use recovery middleware to handle panics
+	router.Use(gin.Logger())   // Use logger middleware to log requests
+	api.ApiRoutes(router)
 
-	router.Run("localhost:" + PORT)
+	if err := router.Run("localhost:" + PORT); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 	log.Println("Server running on http://localhost:" + PORT)
 }

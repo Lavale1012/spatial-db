@@ -15,6 +15,11 @@ type EmbedRequest struct {
 	Text string `json:"text"`
 }
 
+type SearchRequest struct {
+	Text string `json:"text"`
+	K    int    `json:"k"`
+}
+
 func EmbedReq(c *gin.Context) {
 
 	var req EmbedRequest
@@ -40,3 +45,18 @@ func EmbedReq(c *gin.Context) {
 		"vector": vector,
 	})
 }
+
+// func SearchReq(c *gin.Context) {
+// 	var req SearchRequest
+// 	if err := c.ShouldBindJSON(&req); err != nil {
+// 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid JSON"})
+// 		return
+// 	}
+// 	ReqData, err := api.EmbedClient([]byte(req.Text), c)
+// 	if err != nil {
+// 		fmt.Println("Error in embed_client:", err)
+// 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get embedding vector"})
+// 		return
+// 	}
+// 	// for _, vector := range ReqData {}
+// }

@@ -6,15 +6,17 @@ import (
 	"net/http"
 
 	// "strings"
-
 	api "github.com/Lavale1012/vector-db/go-server/clients"
+	"github.com/Lavale1012/vector-db/go-server/config"
+	"github.com/Lavale1012/vector-db/go-server/models"
 	"github.com/gin-gonic/gin"
+	"github.com/lib/pq"
 )
 
 type EmbedRequest struct {
+	ID   string `json:"id"`
 	Text string `json:"text"`
 }
-
 type SearchRequest struct {
 	Text string `json:"text"`
 	K    int    `json:"k"`
@@ -41,6 +43,19 @@ func EmbedReq(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to get embedding vector"})
 		return
 	}
+	model := models.VectorModel{
+		ID:     req.ID,
+		Text:   req.Text,
+		Vector: pq.Float64Array(vector),
+	}
+	// data := config.DB.Create(&model).Error
+
+	if err := config.DB.Create(&model).Error; err != nil {
+		fmt.Println("Error saving vector to database:", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to save vector to database"})
+		return
+	}
+	fmt.Println("Vector saved to database successfully")
 	c.JSON(http.StatusOK, gin.H{
 		"vector": vector,
 	})

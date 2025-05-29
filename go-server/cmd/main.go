@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/Lavale1012/vector-db/go-server/api"
+	"github.com/Lavale1012/vector-db/go-server/config"
 	"github.com/gin-gonic/gin"
 )
 
@@ -12,7 +13,8 @@ func main() {
 	router := gin.Default()
 
 	router.Use(gin.Recovery()) // Use recovery middleware to handle panics
-	router.Use(gin.Logger())   // Use logger middleware to log requests
+	config.ConnectDB()
+	router.Use(gin.Logger()) // Use logger middleware to log requests
 	api.ApiRoutes(router)
 
 	if err := router.Run("localhost:" + PORT); err != nil {

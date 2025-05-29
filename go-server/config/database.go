@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"fmt"
@@ -14,11 +14,11 @@ import (
 var DB *gorm.DB
 
 func ConnectDB() {
-	err := godotenv.Load()
+	err := godotenv.Load("../.env")
 	if err != nil {
 		panic("Error loading .env file")
 	}
-	connectionString := os.Getenv("databaseString")
+	connectionString := os.Getenv("DB_CONNECTION_STRING")
 	if connectionString == "" {
 		panic("Database connection string not set in .env file")
 	}
@@ -28,7 +28,7 @@ func ConnectDB() {
 		panic("Failed to connect to the database: " + err.Error())
 	}
 	fmt.Println("Connected to the database successfully")
-	DB.AutoMigrate(&models.VectorModel{})
 	DB = db
+	DB.AutoMigrate(&models.VectorModel{})
 
 }

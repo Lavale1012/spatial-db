@@ -6,5 +6,6 @@ func ApiRoutes(router *gin.Engine) {
 	group := router.Group("/api")
 	{
 		group.POST("/embed", EmbedReq)
+		// group.GET("/search", SearchReq)
 	}
 }
